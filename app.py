@@ -48,8 +48,9 @@ def log():
             msg = 'Incorrect username/password!'
     return render_template('index.html', msg=msg)
 
-@app.route('/pycsv', methods=['GET', 'POST'])
+@app.route('/pycsv/', methods=['GET', 'POST'])
 def loadcsv():
+    return 'ahorita no joven'
 
 
 if __name__ == '__main__':
