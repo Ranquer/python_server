@@ -1,17 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, session, request
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-import re
-
-UPLOAD_FOLDER = '/CSV'
-ALLOWED_ETENSIONS = {'csv'}
+import os
 
 app = Flask(__name__)
 
 app.secret_key = 'secret_key'
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -48,10 +45,10 @@ def log():
             msg = 'Incorrect username/password!'
     return render_template('index.html', msg=msg)
 
-@app.route('/pycsv/', methods=['GET', 'POST'])
-def loadcsv():
-    return 'ahorita no joven'
+@app.route('/loacsv',  methods=['GET', 'POST'])
+def loacsv():
 
+    return render_template('index.html', msg = 'msg')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,14 +1,17 @@
 {% extends "template.html" %}
 {% block title %}Cargar archivo{% endblock %}
 {% block content %}
-<form action={{url_for("pycsv")}} method="POST">
+<form action={{url_for("loacsv")}} method="POST" enctype="multipart/form-data">
     <h3 class="mb-5">Cargar archivo</h3>
 
     <div>
         <label for="formFileLg" class="form-label">Favor de cargar solo archivos csv</label>
-        <input class="form-control form-control-lg" id="formFileLg" type="file" accept=".csv">
+        <input type="file" class="form-control form-control-lg" id="file" accept=".csv">
     </div>
-    <br>
+
+    <div class="msg">
+        {{msg}}
+    </div>
     <div class="d-grid gap-2">
         <button class="btn btn-primary btn-lg btn-block" type="submit">Subir archivo</button>
     </div>
