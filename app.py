@@ -1,19 +1,22 @@
-from flask import Flask, render_template, request, session, request
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import  FileStorage
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
 import os
+import MySQLdb.cursors
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask.helpers import send_file
+from werkzeug.utils import secure_filename
+from flask_mysqldb import MySQL
+
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = {'csv'}
 
 app = Flask(__name__)
 
 app.secret_key = 'secret_key'
 
-
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'cococo'
 app.config['MYSQL_DB'] = 'users'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 mysql = MySQL(app)
@@ -45,10 +48,34 @@ def log():
             msg = 'Incorrect username/password!'
     return render_template('index.html', msg=msg)
 
-@app.route('/loacsv',  methods=['GET', 'POST'])
-def loacsv():
+@app.route('/loacsv/',  methods=['GET', 'POST'])
+def load():
+    msg = 'Error.'
+    if request.method == 'POST':
+        msg = 'post'
+        if 'file' in request.files:
+            file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        msg = 'Archivo guardado correctamente...'
+    return render_template('loadcsv.html', msg = msg)
 
-    return render_template('index.html', msg = 'msg')
+@app.route('/show/', methods=['GET', 'POST'])
+def redirect():
+    return render_template('show.html')
+
+@app.route('/showTab')
+def show_files():
+    content = os.listdir(app.config['UPLOAD_FOLDER'])
+    files = []
+    print(content)
+    for file in content:
+        print(os.path.join(app.config['UPLOAD_FOLDER']) + '/' + file) 
+        if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER']) + '/' + file) and file.endswith('.csv'):
+            files.append(file)
+    print('aqui toy')
+    print(files)
+    return render_template('show.html', files=files)
 
 if __name__ == '__main__':
     app.run(debug=True)
