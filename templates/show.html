@@ -1,18 +1,19 @@
 {% extends "template.html" %}
 {% block title %}Mostrar archivos{% endblock %}
 {% block content %}
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Nombre del archivo</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for file in files %}
-        <tr>
-            <a href="/visualiza?name={{file}}">{{ file }}</a>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <h1>Seleccion un archivo</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nombre del archivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td><a href="{{url_for('process_request', filename=file) }}" >{{ file }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

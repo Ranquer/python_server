@@ -2,8 +2,11 @@ import os
 import MySQLdb.cursors
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask.helpers import send_file
-from werkzeug.utils import secure_filename
+from werkzeug.utils import html, secure_filename
 from flask_mysqldb import MySQL
+from petl import *
+import csv
+import pandas
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -60,21 +63,24 @@ def load():
         msg = 'Archivo guardado correctamente...'
     return render_template('loadcsv.html', msg = msg)
 
-@app.route('/show/', methods=['GET', 'POST'])
-def redirect():
-    return render_template('show.html')
+@app.route('/vizualiza/<filename>')
+def process_request(filename):
+    table = fromcsv(app.config['UPLOAD_FOLDER'] + '/' + filename)
+    file = pandas.read_csv(app.config['UPLOAD_FOLDER'] + '/' + filename)
+    tabla2 = convert(tabla1, "cp", int)
+    tabla3 = convert(tabla2, "oldpeak", float)
+    tabla4 = convert(tabla3, 'opc', 'upper')
+    tabla5 = convert(tabla4,)
+    file.to_html(filename)
+    return render_template('visualiza.html', msg = filename, tab = tabla4)
 
 @app.route('/showTab')
 def show_files():
     content = os.listdir(app.config['UPLOAD_FOLDER'])
     files = []
-    print(content)
-    for file in content:
-        print(os.path.join(app.config['UPLOAD_FOLDER']) + '/' + file) 
+    for file in content: 
         if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER']) + '/' + file) and file.endswith('.csv'):
             files.append(file)
-    print('aqui toy')
-    print(files)
     return render_template('show.html', files=files)
 
 if __name__ == '__main__':
